@@ -32,7 +32,7 @@ export default function Chat() {
         </div>
       </main>
 
-      <div className="flex px-1 w-full flex justify-center">
+      <div className="flex px-1 w-full justify-center">
         <input
           type="text"
           onChange={(e) => handleText(e.target.value)}
