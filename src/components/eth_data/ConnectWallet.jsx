@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function ConnectWallet() {
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
@@ -9,21 +10,23 @@ export default function ConnectWallet() {
   useEffect(() => {
     if (window.ethereum) {
       setIsMetaMaskInstalled(true);
-      if (window.ethereum.selectedAddress) {
-        setIsMetaMaskConnected(true);
-      }
+      if (window.ethereum.selectedAddress) return location.href = '/listChat/'
     }
   }, []);
 
   const connectWithMetaMask = async () => {
     try {
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const selectedAddress = accounts[0];
       setIsMetaMaskConnected(true);
+      console.log('Dirección de la cuenta conectada:', selectedAddress);
+      setIsMetaMaskConnected(true);
+      
       setTimeout(() => {
         location.href = '/listChat';
       }, 1000);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -38,12 +41,11 @@ export default function ConnectWallet() {
                 <p className="text-lg text-green-400 mb-4">
                   Conectado con MetaMask
                 </p>
-                <button
+                <Link href='/listChat/'
                   className="bg-white text-blue-600 rounded-full px-6 py-3 font-bold hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                  onClick={connectWithMetaMask}
                 >
                   Ir a los chats
-                </button>
+                </Link>
               </>
             ) : (
               <button

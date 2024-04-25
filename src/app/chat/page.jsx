@@ -24,7 +24,7 @@ export default function Chat() {
         <header className="flex bg-slate-600 py-5">
           <nav className="flex px-4">
             <ul>
-              <Link href="/listChats" className='text-white font-semibold text-sm'>Regresar</Link>
+              <Link href="/listChat" className='text-white font-semibold text-sm'>Regresar</Link>
             </ul>
           </nav>
         </header>
