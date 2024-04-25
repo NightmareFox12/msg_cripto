@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/chat/page.jsx", "src/components/chat/MsgSend.tsx", "src/app/chat/page.jsx", "src/app/listChats/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/chat/page.jsx", "src/components/chat/MsgSend.tsx", "src/app/chat/page.jsx", "src/app/listChat/page.jsx", "src/app/layout.jsx"],
   "exclude": ["node_modules"]
 }

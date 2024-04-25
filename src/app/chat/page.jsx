@@ -1,6 +1,6 @@
 'use client';
 
-import React, { DetailedHTMLProps, InputHTMLAttributes, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
 export default function Chat() {
@@ -35,7 +35,7 @@ export default function Chat() {
           </article>
           <article className="flex justify-end">
             <div className="self-end p-4 rounded-lg bg-blue-600 text-white">
-              You need chamba? 😋
+              <p className='select-none' >You need chamba? 😋</p>
             </div>
           </article>
         </div>
