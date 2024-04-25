@@ -9,7 +9,7 @@ export default function Inicio() {
     <div>
       <h1>
         Aqui va la broma de la conexion para detectar la wallet al inciar la
-        aplicacion
+        aplicacion, aunque tranquilamente se cambiara a futuro para la lista de chat
       </h1>
       <div className='flex justify-center'>
         <a href='/chat' className="bg-blue-600 rounded-sm text-sm p-1">
