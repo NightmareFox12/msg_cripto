@@ -4,9 +4,8 @@ import Link from 'next/link';
 export default function ListChats() {
   return (
     <div className="bg-gray-100 min-h-screen">
-      {/* Encabezado */}
-      <header className="bg-slate-600 text-white py-4 px-8">
-        <h1 className="text-2xl font-bold">Aplicación de Chat</h1>
+      <header className="bg-gradient-to-t from-blue-400 to-blue-800 text-white py-2 px-5">
+        <h1 className="text-xl font-bold">Aplicación de Chat</h1>
       </header>
 
       <main className="container mx-auto py-1">
