@@ -1,13 +1,17 @@
-import { ethers } from 'ethers'
+import { ethers } from 'ethers';
 
-// A Web3Provider wraps a standard Web3 provider, which is
-// what MetaMask injects as window.ethereum into each page
-const provider = new ethers.providers.Web3Provider(window.ethereum)
+export const updateAddressContext = async () => {
+  try {
+    if (typeof window.ethereum === 'undefined') {
+      console.error('MetaMask is not installed!');
+      return;
+    }
 
-// MetaMask requires requesting permission to connect users accounts
-await provider.send("eth_requestAccounts", []);
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    return Promise.resolve(signer.address);
 
-// The MetaMask plugin also allows signing transactions to
-// send ether and pay to change state within the blockchain.
-// For this, you need the account signer...
-const signer = provider.getSigner()
+  } catch (err) {
+    console.error(err);
+  }
+};
