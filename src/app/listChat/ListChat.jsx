@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { AddressContext } from '@/context/AddressContext';
 import DialogComponent from '@/components/chat/DialogComponent';
 import {getAllchats} from '@/hooks/getAllChats'
+import { initContract } from '@/hooks/initContract';
 
 export default function ListChats() {
   const { address, setAddress } = useContext(AddressContext);
@@ -33,7 +34,7 @@ export default function ListChats() {
 
     setAddress(window.ethereum.selectedAddress)
     const {receives,senders} = await getAllchats()
-    
+
     console.log(receives.length)
     console.log(senders.length)
   };
@@ -76,7 +77,7 @@ export default function ListChats() {
         </section>
       </main>
 
-      <DialogComponent />
+      <DialogComponent address={address} />
     </div>
   );
 }

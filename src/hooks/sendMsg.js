@@ -3,14 +3,17 @@ import {ethers} from 'ethers'
 import {initContract} from './initContract'
 
 
-export const sendMessage = async (address,msg) => {
+export const sendMessage = async (myAddress,address,msg) => {
+  // console.log(myAddress)
   const contract = await initContract()
+  const newContract = contract.connect() //aqui me quede
 
   const addressNow = await contract.addressNow();
   console.log(addressNow);
 
-  const tx = await contract.sendMessage(address,msg);
-  console.log('Transacción enviada:', tx.hash);
-  const receipt = await tx.wait();
-  console.log('Transacción confirmada:', receipt.transactionHash);
+  const tx = await contract.sendMessage.staticCall(address,msg);
+  console.log('Transacción enviada:', tx);
+  // const receipt = await t
+
+  // console.log('Transacción confirmada:', receipt.transactionHash);
 }

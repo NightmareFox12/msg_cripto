@@ -7,7 +7,7 @@ import BtnSendMsg from '@/components/chat/BtnSendMsg';
 // import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { sendMessage } from '@/hooks/sendMsg';
 
-export default function DialogComponent() {
+export default function DialogComponent({address}) {
   const [addressInput, setAddressInput] = useState('');
   const [messageInput, setMessageInput] = useState('');
   const [open, setOpen] = useState(true);
@@ -17,8 +17,11 @@ export default function DialogComponent() {
     //minimo el address sea de 42 caracteres. tambien debe empezar con 0x
 
     console.log(addressInput, messageInput);
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    if (accounts.length === 0) return location.href = '/';
 
-    sendMessage(addressInput, messageInput);
+    console.log(window.ethereum.selectedAddress)
+    sendMessage(window.ethereum.selectedAddress, addressInput, messageInput);
     console.log('tengo nervios')
   }
 
