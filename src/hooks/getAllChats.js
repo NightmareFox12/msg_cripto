@@ -8,9 +8,6 @@ export const getAllchats = async (signner) => {
     const receives = await contract.getAllChatsReceiver();
     const senders = await contract.getAllChatsSender();
 
-    console.log(receives)
-    console.log(senders)
-
     return Promise.resolve({receives,senders})
 
   } catch (err) {

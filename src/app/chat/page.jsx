@@ -28,6 +28,13 @@ export default function Chat() {
   };
 
   useEffect(() => {
+    const address = location.search.split('=')[1];
+
+    console.log(address)
+
+  },[])
+
+  useEffect(() => {
     // Si hay nuevos mensajes, mostramos la notificación durante 3 segundos
     // if (messages.length > 0) {
     //   setNewMessageNotification(true);

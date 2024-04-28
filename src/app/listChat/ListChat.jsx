@@ -1,8 +1,7 @@
 'use client';
 //cSPELL:DISABLE
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { AddressContext } from '@/context/AddressContext';
 import DialogComponent from '@/components/chat/DialogComponent';
 import { getAllchats } from '@/hooks/getAllChats';
 import { ethers } from 'ethers';
@@ -10,8 +9,9 @@ import { Toaster, toast } from 'sonner';
 import { initContract } from '@/hooks/initContract';
 
 export default function ListChats() {
-  const { address, setAddress } = useContext(AddressContext);
+  const [address, setAddress ] = useState('');
   const [allChats, setAllChats] = useState([]);
+  const [imagesUser, setImagesUser] = useState([]);
 
   const showAlert = async (msg, status) => {
     if (status === 'error') return toast.error(msg);
@@ -34,6 +34,19 @@ export default function ListChats() {
 
     setAllChats(allChats)
   };
+
+  useEffect(() => {
+    (async () => {
+      const number = allChats.length;
+      const req = await fetch(`https://randomuser.me/api/?results=${number}`);
+      const res = await req.json();
+
+      const imagesArr = res.results.map(user => user.picture.large)
+      setImagesUser(imagesArr)
+    })()
+
+  },[allChats])
+
 
   useEffect(() => {
     handleChangeAccount();
@@ -83,19 +96,19 @@ export default function ListChats() {
           {allChats.map((data,key) => (
             <Link
               key={key}
-              href="/chat?address=34"
+              href={`/chat?address=${data}`}
               className="flex-1 bg-white shadow-md hover:shadow-lg transition duration-300"
             >
               <div className="p-4">
                 <div className="flex items-center">
                   <img
-                    src="https://laboratoriosniam.com/wp-content/uploads/2018/07/michael-dam-258165-unsplash_WEB2.jpg"
+                    src={imagesUser[key]}
                     alt="Foto de perfil de Maria"
                     className="rounded-full w-16 h-16 flex-shrink-0"
                   />
                   <div className="ml-4">
                     <h2 className="text-lg font-semibold">{data}</h2>
-                    <p className="text-gray-600">Hola, ¿cómo estás? (recibido)</p>
+                    <p className="text-gray-600">Hola, ¿cómo estás?</p>
                   </div>
                 </div>
               </div>

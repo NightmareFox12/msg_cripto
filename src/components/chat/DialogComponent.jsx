@@ -12,7 +12,7 @@ import { ethers } from 'ethers';
 export default function DialogComponent({ showAlert }) {
   const [addressInput, setAddressInput] = useState('');
   const [messageInput, setMessageInput] = useState('');
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

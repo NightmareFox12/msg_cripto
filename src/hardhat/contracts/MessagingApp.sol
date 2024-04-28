@@ -116,31 +116,35 @@ contract MessagingApp {
     return msg.sender;
   }
 
-        // Función para marcar un mensaje como leído
-        // function markMessageAsRead(
-        // 	address _sender,
-        // 	address _receiver,
-        // 	uint256 _messageId
-        // ) external isAuthenticated messageExists(_sender, _receiver, _messageId) {
-        // 	require(
-        // 		msg.sender == _receiver,
-        // 		"Only the receiver can mark a message as read"
-        // 	);
-        // 	messages[_sender][_receiver][_messageId].isRead = true;
-        // 	emit MessageRead(_sender, _receiver, _messageId);
-        // 	unreadCount[_receiver][_sender]--;
-        // 	lastReadMessageId[_sender][_receiver] = _messageId;
-        // }
+  function getMessages(address _receiver) public view returns (Message[] memory) {
+    return AllMessages[msg.sender][_receiver];
+  }
+  
+  // Función para marcar un mensaje como leído
+  // function markMessageAsRead(
+  // 	address _sender,
+  // 	address _receiver,
+  // 	uint256 _messageId
+  // ) external isAuthenticated messageExists(_sender, _receiver, _messageId) {
+  // 	require(
+  // 		msg.sender == _receiver,
+  // 		"Only the receiver can mark a message as read"
+  // 	);
+  // 	messages[_sender][_receiver][_messageId].isRead = true;
+  // 	emit MessageRead(_sender, _receiver, _messageId);
+  // 	unreadCount[_receiver][_sender]--;
+  // 	lastReadMessageId[_sender][_receiver] = _messageId;
+  // }
 
-        // Función para obtener el número total de mensajes no leídos
-        // function getUnreadCount(address _sender,address _receiver) public view returns (uint256) {
-        // 	return unreadCount[_sender][_receiver];
-        // }
+  // Función para obtener el número total de mensajes no leídos
+  // function getUnreadCount(address _sender,address _receiver) public view returns (uint256) {
+  // 	return unreadCount[_sender][_receiver];
+  // }
 
-        // Función para enviar notificación al receptor de un mensaje
-        // function emitNotification(address _receiver, uint256 _messageId) private {
-        // 	emit NotificationSent(_receiver, _messageId, block.timestamp);
-        // }
+  // Función para enviar notificación al receptor de un mensaje
+  // function emitNotification(address _receiver, uint256 _messageId) private {
+  // 	emit NotificationSent(_receiver, _messageId, block.timestamp);
+  // }
 
     // 	// Función para eliminar un mensaje
     // 	function deleteMessage(
@@ -180,50 +184,50 @@ contract MessagingApp {
     // 		delete messages[_receiver][_sender];
     // 	}
 
-    // 	// Función para responder a un mensaje específico
-    // 	// function replyToMessage(address _receiver,bytes memory _encryptedContent,bytes memory _proof,uint256 _originalMessageId) external isAuthenticated {
-    // 	// 	bytes32[] memory merkleProof = new bytes32[](_proof.length / 32 + 1);
+    	// Función para responder a un mensaje específico
+    	// function replyToMessage(address _receiver,bytes memory _encryptedContent,bytes memory _proof,uint256 _originalMessageId) external isAuthenticated {
+    	// 	bytes32[] memory merkleProof = new bytes32[](_proof.length / 32 + 1);
 
-    // 	// 	for (uint256 i = 0; i < _proof.length / 32; i++) {
-    // 	// 		bytes32 value;
-    // 	// 		assembly {
-    // 	// 			value := mload(add(_proof, add(32, mul(32, i))))
-    // 	// 		}
-    // 	// 		merkleProof[i] = value;
-    // 	// 	}
+    	// 	for (uint256 i = 0; i < _proof.length / 32; i++) {
+    	// 		bytes32 value;
+    	// 		assembly {
+    	// 			value := mload(add(_proof, add(32, mul(32, i))))
+    	// 		}
+    	// 		merkleProof[i] = value;
+    	// 	}
 
-    // 	// 	require(
-    // 	// 		MerkleProof.verify(
-    // 	// 			merkleProof,
-    // 	// 			merkleRoot,
-    // 	// 			keccak256(abi.encodePacked(_receiver, _encryptedContent))
-    // 	// 		),
-    // 	// 		"Proof verification failed"
-    // 	// 	);
-    // 	// 	require(
-    // 	// 		_originalMessageId < messages[_receiver][msg.sender].length,
-    // 	// 		"Original message does not exist"
-    // 	// 	);
+    	// 	require(
+    	// 		MerkleProof.verify(
+    	// 			merkleProof,
+    	// 			merkleRoot,
+    	// 			keccak256(abi.encodePacked(_receiver, _encryptedContent))
+    	// 		),
+    	// 		"Proof verification failed"
+    	// 	);
+    	// 	require(
+    	// 		_originalMessageId < messages[_receiver][msg.sender].length,
+    	// 		"Original message does not exist"
+    	// 	);
 
-    // 	// 	// Cifrar el contenido de la respuesta con cifrado homomórfico
-    // 	// 	// Aquí se implementaría la lógica del cifrado homomórfico
+    	// 	// Cifrar el contenido de la respuesta con cifrado homomórfico
+    	// 	// Aquí se implementaría la lógica del cifrado homomórfico
 
-    // 	// 	messages[_receiver][msg.sender].push(
-    // 	// 		Message({
-    // 	// 			sender: msg.sender,
-    // 	// 			receiver: _receiver,
-    // 	// 			encryptedContent: _encryptedContent, // Aquí se guardaría el contenido cifrado
-    // 	// 			timestamp: block.timestamp,
-    // 	// 			isRead: false
-    // 	// 		})
-    // 	// 	);
-    // 	// 	emit MessageSent(
-    // 	// 		msg.sender,
-    // 	// 		_receiver,
-    // 	// 		messages[_receiver][msg.sender].length - 1,
-    // 	// 		block.timestamp
-    // 	// 	);
-    // 	// 	unreadCount[msg.sender][_receiver]++;
-    // 	// 	emitNotification(msg.sender,messages[_receiver][msg.sender].length - 1);
-    // 	// }
+    	// 	messages[_receiver][msg.sender].push(
+    	// 		Message({
+    	// 			sender: msg.sender,
+    	// 			receiver: _receiver,
+    	// 			encryptedContent: _encryptedContent, // Aquí se guardaría el contenido cifrado
+    	// 			timestamp: block.timestamp,
+    	// 			isRead: false
+    	// 		})
+    	// 	);
+    	// 	emit MessageSent(
+    	// 		msg.sender,
+    	// 		_receiver,
+    	// 		messages[_receiver][msg.sender].length - 1,
+    	// 		block.timestamp
+    	// 	);
+    	// 	unreadCount[msg.sender][_receiver]++;
+    	// 	emitNotification(msg.sender,messages[_receiver][msg.sender].length - 1);
+    	// }
 }
