@@ -2,12 +2,14 @@
 import { ethers } from 'ethers';
 import ContractABI from '@/hardhat/artifacts/contracts/MessagingApp.sol/MessagingApp.json';
 
-export const initContract = async () => {
+export const initContract = async (signner) => {
   try {
-    const contractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
+    const contractAddress = '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9';
     const provider = new ethers.JsonRpcProvider();
     const contract = new ethers.Contract(contractAddress,ContractABI.abi,provider);
-    return Promise.resolve(contract);
+    
+    const newContract = contract.connect(signner);
+    return Promise.resolve(newContract);
   
   } catch (err) {
     return Promise.reject('error al conectar con el contract', err);

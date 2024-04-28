@@ -2,18 +2,22 @@
 import {ethers} from 'ethers'
 import {initContract} from './initContract'
 
+export const sendMessage = async (newSignner,address,msg) => {
+  try {
+    const contract = await initContract(newSignner)
 
-export const sendMessage = async (myAddress,address,msg) => {
-  // console.log(myAddress)
-  const contract = await initContract()
-  const newContract = contract.connect() //aqui me quede
+    const data = await contract['sendMessage(address,string)'](address,msg)
 
-  const addressNow = await contract.addressNow();
-  console.log(addressNow);
+    const txReceipt = await data.wait();
 
-  const tx = await contract.sendMessage.staticCall(address,msg);
-  console.log('Transacción enviada:', tx);
-  // const receipt = await t
+// Verificar si la transacción fue exitosa
+  if (txReceipt.status === 1) {
+    console.log(';listo')
+    return Promise.resolve();
+  }
 
-  // console.log('Transacción confirmada:', receipt.transactionHash);
+  } catch (err) {
+    return Promise.reject(new Error(err.reason))
+  }
 }
+

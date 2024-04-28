@@ -45,11 +45,6 @@ contract MessagingApp {
     owner = msg.sender;
   }
 
-  modifier isAuthenticated() {
-    require(msg.sender == tx.origin,"Only authenticated users can perform this action");
-    _;
-  }
-
   modifier onlyOwner() {
     require(msg.sender == owner, "Only the owner can perform this action");
     _;
@@ -59,7 +54,7 @@ contract MessagingApp {
     return owner;
   }
 
-  function sendMessage(address _receiver,string memory _text) external isAuthenticated {
+  function sendMessage(address _receiver,string memory _text) public {
     require(msg.sender != _receiver, "Cannot send message to yourself");
 
     bytes32 _encryptedContent = keccak256(abi.encodePacked(_text));
@@ -99,7 +94,7 @@ contract MessagingApp {
     // emitNotification(_receiver, messages[msg.sender][_receiver].length - 1);
   }
 
-  function getAllChatsReceiver() public view isAuthenticated returns (address[] memory) {
+  function getAllChatsReceiver() public view returns (address[] memory) {
     address[] memory allChatsAddressReceivers = new address[](chatAddressesReceivers[msg.sender].length);
       
     for(uint i = 0; i < chatAddressesReceivers[msg.sender].length; i++) {
@@ -108,7 +103,7 @@ contract MessagingApp {
     return allChatsAddressReceivers;
   }
 
-  function getAllChatsSender() public view isAuthenticated returns (address[] memory) {
+  function getAllChatsSender() public view returns (address[] memory) {
     address[] memory allChatsAddressSenders = new address[](chatAddressesSenders[msg.sender].length);
       
     for(uint i = 0; i < chatAddressesSenders[msg.sender].length; i++) {

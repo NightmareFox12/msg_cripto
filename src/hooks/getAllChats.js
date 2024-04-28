@@ -1,12 +1,15 @@
 //cSPELL:DISABLE
 import {initContract} from './initContract';
 
-export const getAllchats = async () => {
+export const getAllchats = async (signner) => {
   try {
-    const contract = await initContract();
+    const contract = await initContract(signner);
 
     const receives = await contract.getAllChatsReceiver();
     const senders = await contract.getAllChatsSender();
+
+    console.log(receives)
+    console.log(senders)
 
     return Promise.resolve({receives,senders})
 
