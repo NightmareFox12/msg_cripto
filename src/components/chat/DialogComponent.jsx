@@ -2,12 +2,21 @@
 //cSPELL:DISABLE
 
 import { Fragment, useRef, useState } from 'react';
-import BtnSendMsg from '@/components/chat/BtnSendMsg'
+import BtnSendMsg from '@/components/chat/BtnSendMsg';
 // import { Dialog, Transition } from '@headlessui/react'
 // import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 export default function DialogComponent() {
+  const [addressInput, setAddressInput] = useState('');
+  const [messageInput, setMessageInput] = useState('');
   const [open, setOpen] = useState(true);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    console.log(addressInput, messageInput);
+  }
+
 
   return (
     <div>
@@ -29,9 +38,11 @@ export default function DialogComponent() {
       </Transition.Child> */}
 
       <div
-        className="fixed inset-0 z-10 w-screen overflow-y-auto"
-        style={{ display: [open ? 'fixed' : 'none'] }}
+        className={`fixed inset-0 z-10 w-screen overflow-y-auto ${
+          open ? '' : 'hidden'
+        }`}
       >
+        {/* Contenido del componente */}
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           {/* <Transition.Child
             as={Fragment}
@@ -43,57 +54,63 @@ export default function DialogComponent() {
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           > */}
           <section className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-            <div className="flex flex-col gap-6 p-6 md:p-8 lg:p-10 bg-white rounded-lg shadow-lg">
-              <div className="space-y-2">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="address"
-                >
-                  Address
-                </label>
-                <input
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3"
-                  id="address"
-                  placeholder="Enter the user's address"
-                  type="text"
-                />
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col gap-6 p-6 md:p-8 lg:p-10 bg-white rounded-lg shadow-lg">
+                <div className="space-y-2">
+                  <label
+                    className="block text-sm font-medium text-gray-700"
+                    htmlFor="address"
+                  >
+                    Address
+                  </label>
+                  <input
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3"
+                    id="address"
+                    value={addressInput}
+                    placeholder="Enter the user's address"
+                    onChange={(e) => setAddressInput(e.target.value)}
+                    type="text"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    className="block text-sm font-medium text-gray-700"
+                    htmlFor="message"
+                  >
+                    message
+                  </label>
+                  <input
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3"
+                    id="message"
+                    placeholder="Enter the message"
+                    type="text"
+                    value={messageInput}
+                    onChange={(e) => setMessageInput(e.target.value)}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="message"
-                >
-                  message
-                </label>
-                <input
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-3"
-                  id="message"
-                  placeholder="Enter the message"
-                  type="text"
-                />
-              </div>
-            </div>
 
-            <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-              <button
-                type="button"
-                className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto"
-                // onClick={() => setOpen(false)}
-              >
-                Iniciar chat
-              </button>
-              <button
-                type="button"
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                onClick={() => {
-                  setOpen(false);
-                  console.log(open)
-                }}
-                // ref={cancelButtonRef}
-              >
-                Cerrar
-              </button>
-            </div>
+              <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <button
+                  type="submit"
+                  className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto"
+                  // onClick={() => setOpen(false)}
+                >
+                  Iniciar chat
+                </button>
+                <button
+                  type="button"
+                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                  onClick={() => {
+                    setOpen(false);
+                    console.log(open);
+                  }}
+                  // ref={cancelButtonRef}
+                >
+                  Cerrar
+                </button>
+              </div>
+            </form>
           </section>
           {/* </Transition.Child> */}
         </div>

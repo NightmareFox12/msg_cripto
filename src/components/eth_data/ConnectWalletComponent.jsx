@@ -3,35 +3,37 @@
 
 import React, { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
-import { AddressContext } from '@/context/AddressContext';
-import { updateAddressContext } from '../../hooks/connect';
-
+import { ethers } from 'ethers';
 
 export default function ConnectWalletComponent() {
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
   const [isMetaMaskConnected, setIsMetaMaskConnected] = useState(false);
-  const { setAddress } = useContext(AddressContext);
 
   useEffect(() => {
-    if (window.ethereum === 'undefined') return setIsMetaMaskInstalled(false);
+    handleChangeAccount();
 
-    setIsMetaMaskInstalled(true);
-    if (window.ethereum.selectedAddress) {
-      connectWithMetaMask();
-      setIsMetaMaskConnected(true);
-      return (location.href = '/listChat/');
+    if (window.ethereum === 'undefined') setIsMetaMaskInstalled(false);
+    else {
+      setIsMetaMaskInstalled(true);
+      if (window.ethereum.selectedAddress) setIsMetaMaskConnected(true);
+
+      //listen to all actions account
+      window.ethereum.on('accountsChanged', handleChangeAccount);
     }
-
-    //listen to change account
-    window.ethereum.on("accountsChanged",connectWithMetaMask);
-
   }, []);
 
-  const connectWithMetaMask = async () => {
+  const handleChangeAccount = async () => {
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    if (accounts.length === 0) setIsMetaMaskConnected(false);
+  };
+
+  const connectWithMetaMaskBtn = async () => {
     try {
-      updateAddressContext().then((currentAddress) => setAddress(currentAddress));
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      await provider.getSigner();
+      setIsMetaMaskConnected(true)
     } catch (err) {
-      console.error(err);
+      setIsMetaMaskConnected(false);
     }
   };
 
@@ -56,7 +58,7 @@ export default function ConnectWalletComponent() {
             ) : (
               <button
                 className="bg-white text-blue-600 rounded-full px-6 py-3 font-bold hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                onClick={connectWithMetaMask}
+                onClick={connectWithMetaMaskBtn}
               >
                 Conectar con MetaMask
               </button>

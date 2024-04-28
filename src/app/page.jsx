@@ -1,8 +1,8 @@
 import React from 'react';
-import ConnectWallet from '@/app/wallet/page'
+import ConnectWalletComponent from '@/components/eth_data/ConnectWalletComponent';
 
 export default function Inicio() {
   return (
-    <ConnectWallet />
+    <ConnectWalletComponent />
   );
 }
