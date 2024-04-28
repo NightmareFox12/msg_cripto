@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-
+import { initContract } from '@/hooks/initContract';
+import { ethers } from 'ethers';
 // Tengo que hacer una wea flotable que al presionar por tantos segundos aparezca para eliminar ese mensaje en especifico
 
 export default function Chat() {
@@ -31,8 +32,19 @@ export default function Chat() {
     const address = location.search.split('=')[1];
 
     console.log(address)
-
+    getAllMessages(address)
   },[])
+
+  const getAllMessages = async (address) => {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signner = await provider.getSigner();
+
+    const contract = await initContract(signner);
+
+    const messages = await contract.getMessages.staticCall(address);
+
+    console.log(messages)
+  }
 
   useEffect(() => {
     // Si hay nuevos mensajes, mostramos la notificación durante 3 segundos
