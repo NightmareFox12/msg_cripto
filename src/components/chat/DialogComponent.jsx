@@ -5,16 +5,21 @@ import { Fragment, useRef, useState } from 'react';
 import BtnSendMsg from '@/components/chat/BtnSendMsg';
 // import { Dialog, Transition } from '@headlessui/react'
 // import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { sendMessage } from '@/hooks/sendMsg';
 
 export default function DialogComponent() {
   const [addressInput, setAddressInput] = useState('');
   const [messageInput, setMessageInput] = useState('');
   const [open, setOpen] = useState(true);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    //minimo el address sea de 42 caracteres. tambien debe empezar con 0x
 
     console.log(addressInput, messageInput);
+
+    sendMessage(addressInput, messageInput);
+    console.log('tengo nervios')
   }
 
 

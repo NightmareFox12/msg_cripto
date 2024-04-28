@@ -3,9 +3,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AddressContext } from '@/context/AddressContext';
-import { ethers } from 'ethers';
-import ContractABI from '@/hardhat/artifacts/contracts/MessagingApp.sol/MessagingApp.json';
 import DialogComponent from '@/components/chat/DialogComponent';
+import {getAllchats} from '@/hooks/getAllChats'
 
 export default function ListChats() {
   const { address, setAddress } = useContext(AddressContext);
@@ -14,54 +13,30 @@ export default function ListChats() {
   const [isMetamaskConnected, setIsMetamaskConnected] = useState(true);
 
   useEffect(() => {
-    console.log(window.ethereum.selectedAddress)
+    handleChangeAccount();
 
-    if (window.ethereum.selectedAddress) 
+    if (window.ethereum === 'undefined') return location.href = '/';
+    else {
+      if (window.ethereum.selectedAddress) { 
+        setIsMetamaskConnected(true);
+        setAddress(window.ethereum.selectedAddress)
+      }
 
-    //listen to change account
-    window.ethereum.on('accountsChanged', handleMetamask);
+      //listen to all actions account
+      window.ethereum.on('accountsChanged', handleChangeAccount);
+    }
   }, []);
 
-  const handleMetamask = async () => {
-    if()
-    // updateAddressContext().then((currentAddress) => {
-    //   setAddress(currentAddress);
-    // });
+  const handleChangeAccount = async () => {
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    if (accounts.length === 0) return location.href = '/';
 
-    contract
-    .getAllChatsReceiver()
-    .then((result) => {
-      console.log('Resultado de la función: ', result);
-      setAllChatsReceiver(result);
-    })
-    .catch((error) => {
-      console.error('Error al llamar a la función: ', error);
-    });
-
-  // Llamar a la función
-  contract
-    .getAllChatsSender()
-    .then((result) => {
-      console.log('Resultado de la función: ', result);
-      setAllChatsSender(result);
-    })
-    .catch((error) => {
-      console.error('Error al llamar a la función: ', error);
-    });
+    setAddress(window.ethereum.selectedAddress)
+    const {receives,senders} = await getAllchats()
+    
+    console.log(receives.length)
+    console.log(senders.length)
   };
-
-  const contractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
-  const provider = new ethers.JsonRpcProvider();
-
-  // Conectar al contrato
-  const contract = new ethers.Contract(
-    contractAddress,
-    ContractABI.abi,
-    provider
-  );
-
-  // Llamar a la función
- 
 
   return (
     <div className="bg-gray-100 min-h-screen">
