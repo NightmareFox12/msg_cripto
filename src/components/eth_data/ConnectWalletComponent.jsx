@@ -1,11 +1,11 @@
 'use client';
 //cSPELL:DISABLE
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ethers } from 'ethers';
 
-export default function ConnectWalletComponent() {
+export default function ConnectWalletComponent({readJson}) {
   const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
   const [isMetaMaskConnected, setIsMetaMaskConnected] = useState(false);
 

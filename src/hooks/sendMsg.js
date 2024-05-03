@@ -1,5 +1,3 @@
-//cSPELL:DISABLE
-import {ethers} from 'ethers'
 import {initContract} from './initContract'
 
 export const sendMessage = async (newSignner,address,msg) => {
