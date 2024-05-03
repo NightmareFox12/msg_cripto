@@ -86,7 +86,7 @@ export default function ListChats() {
         <p className='text-md'>{address}</p>
       </header>
 
-      <main className="container min-h-screen py-1 bg-slate-100">
+      <main className="w-full min-h-screen py-1 bg-slate-100">
         <section className="flex flex-col gap-1 px-2">
           {allChats.length === 0 && (
             <div className='flex items-center justify-center min-h-screen w-full'>
