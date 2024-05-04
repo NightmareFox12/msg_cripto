@@ -9,7 +9,7 @@ import { sendMessage } from '@/hooks/sendMsg';
 import { ethers } from 'ethers';
 
 
-export default function DialogComponent({ showAlert }) {
+export default function DialogComponent({ showAlert,ABIfile }) {
   const [addressInput, setAddressInput] = useState('');
   const [messageInput, setMessageInput] = useState('');
   const [open, setOpen] = useState(false);
@@ -24,7 +24,7 @@ export default function DialogComponent({ showAlert }) {
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signner = await provider.getSigner();
     
-    sendMessage(signner, addressInput, messageInput).then(success => {
+    sendMessage(signner, addressInput, messageInput,ABIfile).then(() => {
       showAlert('Message send','success');
     })
     .catch((err) => {

@@ -125,7 +125,7 @@ export default function ListChats({ABIfile}) {
         </section>
       </main>
 
-      <DialogComponent showAlert={showAlert} />
+      <DialogComponent showAlert={showAlert} ABIfile={ABIfile} />
     </div>
   );
 }

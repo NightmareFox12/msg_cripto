@@ -12,6 +12,7 @@ export const initContract = async (signner,ABIfile) => {
     return Promise.resolve(newContract);
   
   } catch (err) {
+    console.log(err)
     return Promise.reject('error al conectar con el contract', err);
   }
 };
