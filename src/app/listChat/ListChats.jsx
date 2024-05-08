@@ -37,19 +37,19 @@ export default function ListChats({ABIfile}) {
 
   useEffect(() => {
     (async () => {
-      const number = allChats.length;
-      const req = await fetch(`https://randomuser.me/api/?results=${number}`);
-      const res = await req.json();
+      // const number = allChats.length;
+      // const req = await fetch(`https://randomuser.me/api/?results=${number}`);
+      // const res = await req.json();
 
-      const imagesArr = res.results.map(user => user.picture.large)
-      setImagesUser(imagesArr)
+      // const imagesArr = res.results.map(user => user.picture.large)
+      // setImagesUser(imagesArr)
     })()
 
   },[allChats])
 
   useEffect(() => {
     setAbiFile(ABIfile)
-    handleChangeAccount(); //-
+    handleChangeAccount();
 
     if (window.ethereum === 'undefined') return location.href = '/';
     else {
@@ -101,11 +101,11 @@ export default function ListChats({ABIfile}) {
             >
               <div className="p-4">
                 <div className="flex items-center">
-                  <img
+                  {/* <img
                     src={imagesUser[key]}
                     alt="Foto de perfil de Maria"
                     className="rounded-full w-16 h-16 flex-shrink-0"
-                  />
+                  /> */}
                   <div className="ml-4">
                     <h2 className="text-lg font-semibold">{data}</h2>
                     <p className="text-gray-600">Hola, ¿cómo estás?</p>

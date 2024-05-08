@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "chain": "cd src/hardhat && npx hardhat node",
+    "clean": "cd src/hardhat && npx hardhat clean",
     "deploy": "cd src/hardhat && npx hardhat ignition deploy ./ignition/modules/MessagingApp.js --network localhost"
   },
   "dependencies": {

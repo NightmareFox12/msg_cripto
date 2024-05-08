@@ -1,22 +1,27 @@
 'use client';
-//cSPELL:DISABLE
 
-import { Fragment, useEffect, useRef, useState } from 'react';
-import BtnSendMsg from '@/components/chat/BtnSendMsg';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 // import { Dialog, Transition } from '@headlessui/react'
 // import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { sendMessage } from '@/hooks/sendMsg';
 import { ethers } from 'ethers';
 import { Toaster, toast } from 'sonner';
+import FAB from '@/components/chat/FAB';
 
-export default function DialogComponent({ showAlert, ABIfile }) {
+
+export default function DialogComponent() {
   const [addressInput, setAddressInput] = useState('');
   const [open, setOpen] = useState(false);
   const [info, setInfo] = useState('');
   const [btnInputState, setBtnInputState] = useState(true);
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setBtnInputState(true);
+    setShowSpinner(true);
     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
     if (accounts.length === 0) return (location.href = '/');
 
@@ -25,12 +30,15 @@ export default function DialogComponent({ showAlert, ABIfile }) {
 
     const req = await fetch('/listChat/api', {
       method: 'POST',
-      body: JSON.stringify({ addressInput }),
+      body: JSON.stringify({ addressInput, signner }),
     });
 
     const res = await req.json();
-    if (res.msg === 'ok') return (location.href = '/chat/');
-    else return toast.error(res.msg);
+    setBtnInputState(false);
+    setShowSpinner(false);
+
+    if (res.msg !== 'ok') return toast.error(res.msg);
+    else document.getElementById('hola').click();
 
     //-Aqui hacer las verificaciones para enviar al API de esta misma carpeta donde compruebo que no sea la misma address y que sea valida y redireccionar a la messager donde ya empieza a escribir cheevere.
 
@@ -60,10 +68,9 @@ export default function DialogComponent({ showAlert, ABIfile }) {
   return (
     <>
       <Toaster position="top-center" richColors expand={true} />
-
-      <div>
+      <motion.div>
         <section className="fixed bottom-5 right-5 z-10">
-          <BtnSendMsg setOpen={setOpen} />
+          <FAB setOpen={setOpen} />
         </section>
         {/* <Transition.Root show={open} as={Fragment}> */}
         {/* <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}> */}
@@ -103,10 +110,10 @@ export default function DialogComponent({ showAlert, ABIfile }) {
                       className="block text-md font-medium text-gray-700"
                       htmlFor="address"
                     >
-                      Address
+                      Address del receptor <b className="text-red-500">*</b>
                     </label>
                     <input
-                      className="block w-full rounded-md bg-neutral-50 outline-indigo-200 focus:outline-indigo-500 sm:text-sm px-4 py-3  outline-none"
+                      className="block w-full rounded-md bg-neutral-50 outline-indigo-200 focus:outline-indigo-500 sm:text-sm px-4 py-3  outline-none font-medium"
                       id="address"
                       value={addressInput}
                       placeholder="Ingrese el Address..."
@@ -123,14 +130,19 @@ export default function DialogComponent({ showAlert, ABIfile }) {
                   <button
                     type="submit"
                     disabled={btnInputState}
-                    className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto disabled:bg-gray-400"
+                    className="inline-flex w-full justify-center gap-1 rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto disabled:bg-gray-400"
                     // onClick={() => setOpen(false)}
                   >
+                    <Image
+                      src={require('@/public/icons/FluentSpinnerIos16Filled.svg')}
+                      className={`animate-spin ${showSpinner ? '' : 'hidden'}`}
+                      alt="Cargando..."
+                    ></Image>
                     Iniciar chat
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-gray-100 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-200 sm:mt-0 sm:w-auto"
                     onClick={() => {
                       setOpen(false);
                     }}
@@ -145,7 +157,9 @@ export default function DialogComponent({ showAlert, ABIfile }) {
         </div>
         {/* </Dialog> */}
         {/* </Transition.Root> */}
-      </div>
+      </motion.div>
+
+      <Link id="hola" href={`/chat?address=${addressInput}`}></Link>
     </>
   );
 }

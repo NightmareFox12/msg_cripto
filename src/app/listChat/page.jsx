@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
-
 import { promises as fs } from 'fs';
 
 import ListChats from './ListChats';
+import Loader from '@/components/general/Loader'
 
 const readJson = async () => {
   const file = await fs.readFile(
@@ -10,14 +10,23 @@ const readJson = async () => {
       '/src/hardhat/artifacts/contracts/MessagingApp.sol/MessagingApp.json',
     'utf8'
   );
-  return file;
+  return Promise.resolve(file);
 };
 
 export default async function page() {
   const ABIfile = await readJson();
+
   return (
-    // <Suspense fallback={<div>Loading...</div>}> //-
+    <Suspense
+      fallback={
+        <div className="sticky w-screen h-screen flex items-center justify-center">
+          <div className="text-indigo-400 scale-[2]">
+            <Loader dark={true} />
+          </div>
+        </div>
+      }
+    >
       <ListChats ABIfile={ABIfile} />
-    // </Suspense>
+    </Suspense>
   );
 }

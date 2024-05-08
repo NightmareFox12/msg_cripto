@@ -9,13 +9,13 @@ contract MessagingApp {
   struct Message {
     address sender;
     address receiver;
-    bytes32 encryptedContent;
+    string content;
     uint256 timestamp;
     bool isRead;
   }
 
   event MessageSent(
-  address indexed sender,
+    address indexed sender,
     address indexed receiver,
     uint256 indexed messageId,
     uint256 timestamp
@@ -50,14 +50,14 @@ contract MessagingApp {
     _;
   }
 
-  function getOwner() public view returns(address) {
+  function getOwner() public view returns (address) {
     return owner;
   }
 
-  function sendMessage(address _receiver,string memory _text) public {
+  function sendMessage(address _receiver, string memory _text) public {
     require(msg.sender != _receiver, "Cannot send message to yourself");
 
-    bytes32 _encryptedContent = keccak256(abi.encodePacked(_text));
+    // bytes32 _encryptedContent = keccak256(abi.encodePacked(_text));
     bool chatExists;
 
     for (uint i = 0; i < chatAddressesSenders[msg.sender].length; i++) {
@@ -83,21 +83,26 @@ contract MessagingApp {
       Message({
         sender: msg.sender,
         receiver: _receiver,
-        encryptedContent: _encryptedContent,
+        content: _text,
         timestamp: block.timestamp,
         isRead: false
       })
     );
 
-    emit MessageSent(msg.sender,_receiver,AllMessages[msg.sender][_receiver].length - 1,block.timestamp);
+    emit MessageSent(
+      msg.sender,
+      _receiver,
+      AllMessages[msg.sender][_receiver].length - 1,
+      block.timestamp
+    );
     unreadCount[_receiver][msg.sender]++;
     // emitNotification(_receiver, messages[msg.sender][_receiver].length - 1);
   }
 
   function getAllChatsReceiver() public view returns (address[] memory) {
     address[] memory allChatsAddressReceivers = new address[](chatAddressesReceivers[msg.sender].length);
-      
-    for(uint i = 0; i < chatAddressesReceivers[msg.sender].length; i++) {
+
+    for (uint i = 0; i < chatAddressesReceivers[msg.sender].length; i++) {
       allChatsAddressReceivers[i] = chatAddressesReceivers[msg.sender][i];
     }
     return allChatsAddressReceivers;
@@ -105,21 +110,18 @@ contract MessagingApp {
 
   function getAllChatsSender() public view returns (address[] memory) {
     address[] memory allChatsAddressSenders = new address[](chatAddressesSenders[msg.sender].length);
-      
-    for(uint i = 0; i < chatAddressesSenders[msg.sender].length; i++) {
+
+    for (uint i = 0; i < chatAddressesSenders[msg.sender].length; i++) {
       allChatsAddressSenders[i] = chatAddressesSenders[msg.sender][i];
     }
     return allChatsAddressSenders;
-  } 
-
-  function addressNow() public view returns (address) {
-    return msg.sender;
   }
 
-  function getMessages(address _receiver) public view returns (Message[] memory) {
-    return AllMessages[msg.sender][_receiver];
+  function getMessages(address _receiver) public view returns (Message[] memory, Message[] memory) {
+    require(msg.sender != _receiver, "receiver can not be yourself");
+    return (AllMessages[msg.sender][_receiver],AllMessages[_receiver][msg.sender]);
   }
-  
+
   // Función para marcar un mensaje como leído
   // function markMessageAsRead(
   // 	address _sender,
@@ -146,88 +148,88 @@ contract MessagingApp {
   // 	emit NotificationSent(_receiver, _messageId, block.timestamp);
   // }
 
-    // 	// Función para eliminar un mensaje
-    // 	function deleteMessage(
-    // 		address _sender,
-    // 		address _receiver,
-    // 		uint256 _messageId
-    // 	) external isAuthenticated messageExists(_sender, _receiver, _messageId) {
-    // 		require(
-    // 			msg.sender == _sender || msg.sender == _receiver,
-    // 			"You are not allowed to delete this message"
-    // 		);
-    // 		delete messages[_sender][_receiver][_messageId];
-    // 	}
+  // 	// Función para eliminar un mensaje
+  // 	function deleteMessage(
+  // 		address _sender,
+  // 		address _receiver,
+  // 		uint256 _messageId
+  // 	) external isAuthenticated messageExists(_sender, _receiver, _messageId) {
+  // 		require(
+  // 			msg.sender == _sender || msg.sender == _receiver,
+  // 			"You are not allowed to delete this message"
+  // 		);
+  // 		delete messages[_sender][_receiver][_messageId];
+  // 	}
 
-    // 	// Función para obtener una lista de todos los mensajes enviados por un usuario
-    // 	function getSentMessages(
-    // 		address _sender,
-    // 		address _receiver
-    // 	) external view returns (Message[] memory) {
-    // 		return messages[_sender][_receiver];
-    // 	}
+  // 	// Función para obtener una lista de todos los mensajes enviados por un usuario
+  // 	function getSentMessages(
+  // 		address _sender,
+  // 		address _receiver
+  // 	) external view returns (Message[] memory) {
+  // 		return messages[_sender][_receiver];
+  // 	}
 
-    // 	// Función para obtener una lista de todos los mensajes recibidos por un usuario
-    // 	function getReceivedMessages(
-    // 		address _sender,
-    // 		address _receiver
-    // 	) external view returns (Message[] memory) {
-    // 		return messages[_receiver][_sender];
-    // 	}
+  // 	// Función para obtener una lista de todos los mensajes recibidos por un usuario
+  // 	function getReceivedMessages(
+  // 		address _sender,
+  // 		address _receiver
+  // 	) external view returns (Message[] memory) {
+  // 		return messages[_receiver][_sender];
+  // 	}
 
-    // 	// Función para eliminar todos los mensajes de una conversación
-    // 	function deleteConversation(
-    // 		address _sender,
-    // 		address _receiver
-    // 	) external isAuthenticated {
-    // 		delete messages[_sender][_receiver];
-    // 		delete messages[_receiver][_sender];
-    // 	}
+  // 	// Función para eliminar todos los mensajes de una conversación
+  // 	function deleteConversation(
+  // 		address _sender,
+  // 		address _receiver
+  // 	) external isAuthenticated {
+  // 		delete messages[_sender][_receiver];
+  // 		delete messages[_receiver][_sender];
+  // 	}
 
-    	// Función para responder a un mensaje específico
-    	// function replyToMessage(address _receiver,bytes memory _encryptedContent,bytes memory _proof,uint256 _originalMessageId) external isAuthenticated {
-    	// 	bytes32[] memory merkleProof = new bytes32[](_proof.length / 32 + 1);
+  // Función para responder a un mensaje específico
+  // function replyToMessage(address _receiver,bytes memory _encryptedContent,bytes memory _proof,uint256 _originalMessageId) external isAuthenticated {
+  // 	bytes32[] memory merkleProof = new bytes32[](_proof.length / 32 + 1);
 
-    	// 	for (uint256 i = 0; i < _proof.length / 32; i++) {
-    	// 		bytes32 value;
-    	// 		assembly {
-    	// 			value := mload(add(_proof, add(32, mul(32, i))))
-    	// 		}
-    	// 		merkleProof[i] = value;
-    	// 	}
+  // 	for (uint256 i = 0; i < _proof.length / 32; i++) {
+  // 		bytes32 value;
+  // 		assembly {
+  // 			value := mload(add(_proof, add(32, mul(32, i))))
+  // 		}
+  // 		merkleProof[i] = value;
+  // 	}
 
-    	// 	require(
-    	// 		MerkleProof.verify(
-    	// 			merkleProof,
-    	// 			merkleRoot,
-    	// 			keccak256(abi.encodePacked(_receiver, _encryptedContent))
-    	// 		),
-    	// 		"Proof verification failed"
-    	// 	);
-    	// 	require(
-    	// 		_originalMessageId < messages[_receiver][msg.sender].length,
-    	// 		"Original message does not exist"
-    	// 	);
+  // 	require(
+  // 		MerkleProof.verify(
+  // 			merkleProof,
+  // 			merkleRoot,
+  // 			keccak256(abi.encodePacked(_receiver, _encryptedContent))
+  // 		),
+  // 		"Proof verification failed"
+  // 	);
+  // 	require(
+  // 		_originalMessageId < messages[_receiver][msg.sender].length,
+  // 		"Original message does not exist"
+  // 	);
 
-    	// 	// Cifrar el contenido de la respuesta con cifrado homomórfico
-    	// 	// Aquí se implementaría la lógica del cifrado homomórfico
+  // 	// Cifrar el contenido de la respuesta con cifrado homomórfico
+  // 	// Aquí se implementaría la lógica del cifrado homomórfico
 
-    	// 	messages[_receiver][msg.sender].push(
-    	// 		Message({
-    	// 			sender: msg.sender,
-    	// 			receiver: _receiver,
-    	// 			encryptedContent: _encryptedContent, // Aquí se guardaría el contenido cifrado
-    	// 			timestamp: block.timestamp,
-    	// 			isRead: false
-    	// 		})
-    	// 	);
-    	// 	emit MessageSent(
-    	// 		msg.sender,
-    	// 		_receiver,
-    	// 		messages[_receiver][msg.sender].length - 1,
-    	// 		block.timestamp
-    	// 	);
-    	// 	unreadCount[msg.sender][_receiver]++;
-    	// 	emitNotification(msg.sender,messages[_receiver][msg.sender].length - 1);
-    	// }
+  // 	messages[_receiver][msg.sender].push(
+  // 		Message({
+  // 			sender: msg.sender,
+  // 			receiver: _receiver,
+  // 			encryptedContent: _encryptedContent, // Aquí se guardaría el contenido cifrado
+  // 			timestamp: block.timestamp,
+  // 			isRead: false
+  // 		})
+  // 	);
+  // 	emit MessageSent(
+  // 		msg.sender,
+  // 		_receiver,
+  // 		messages[_receiver][msg.sender].length - 1,
+  // 		block.timestamp
+  // 	);
+  // 	unreadCount[msg.sender][_receiver]++;
+  // 	emitNotification(msg.sender,messages[_receiver][msg.sender].length - 1);
+  // }
 }

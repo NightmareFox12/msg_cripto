@@ -3,9 +3,9 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-export default function BtnSendMsg({ setOpen }) {
+export default function FAB({ setOpen }) {
   const hoverVariants = {
-    hover: { scale: 1.1, rotate: 18, shadow: 10 },
+    hover: { scale: 1.1, shadow: 10 },
     initial: { scale: 1, rotate: 0, shadow: 0 },
   };
   return (

@@ -1,175 +1,30 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { initContract } from '@/hooks/initContract';
-import { ethers } from 'ethers';
-// Tengo que hacer una wea flotable que al presionar por tantos segundos aparezca para eliminar ese mensaje en especifico
+import React, { Suspense } from 'react';
+import { promises as fs } from 'fs';
 
-export default function Chat() {
-  const [inputText, setInputText] = useState('');
-  const [messages, setMessages] = useState([]);
-  // const [newMessageNotification, setNewMessageNotification] = useState(false);
+import Chat from './Chat';
+import Loader from '@/components/general/Loader';
 
-  const [isPressed, setIsPressed] = useState(false);
-  const [pressTimer, setPressTimer] = useState(null);
 
-  const handleMouseDown = () => {
-    setPressTimer(
-      setTimeout(() => {
-        console.log('Elemento presionado por 1 segundo');
-        setIsPressed(true);
-      }, 800)
-    );
-  };
+const readJson = async () => {
+  const file = await fs.readFile(
+    process.cwd() +
+      '/src/hardhat/artifacts/contracts/MessagingApp.sol/MessagingApp.json',
+    'utf8'
+  );
+  return file;
+};
 
-  const handleMouseUp = () => {
-    setIsPressed(false);
-    clearTimeout(pressTimer);
-  };
-
-  useEffect(() => {
-    const address = location.search.split('=')[1];
-
-    console.log(address)
-    getAllMessages(address)
-  },[])
-
-  const getAllMessages = async (address) => {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signner = await provider.getSigner();
-
-    const contract = await initContract(signner);
-
-    const messages = await contract.getMessages.staticCall(address);
-
-    console.log(messages)
-  }
-
-  useEffect(() => {
-    // Si hay nuevos mensajes, mostramos la notificación durante 3 segundos
-    // if (messages.length > 0) {
-    //   setNewMessageNotification(true);
-    //   const timer = setTimeout(() => {
-    //     setNewMessageNotification(false);
-    //   }, 3000);
-    //   return () => clearTimeout(timer);
-    // }
-  }, [messages]);
-
-  const handleText = (text) => {
-    setInputText(text);
-  };
-
-  const handleKey = (key) => {
-    if (key === 'Enter') {
-      if (inputText.trim() !== '') {
-        setMessages([...messages, { text: inputText, id: Date.now() }]);
-        setInputText('');
-      }
-    }
-  };
-
-  const handleClick = () => {
-    if (inputText.trim() !== '') {
-      setMessages([...messages, { text: inputText, id: Date.now() }]);
-      setInputText('');
-    }
-  };
-
-  const handleDelete = (id) => {
-    setMessages(messages.filter((message) => message.id !== id));
-  };
-
-  const handleClearChat = () => {
-    setMessages([]);
-  };
-
-  const handleReply = (originalMessage) => {
-    setInputText(`@${originalMessage.text} `);
-  };
-
+export default async function page() {
+  const ABIfile = await readJson();
   return (
-    <>
-      <main className="bg-gray-100 min-h-screen">
-        <header className="sticky top-0 bg-slate-600 text-white py-5 px-4 flex justify-between items-center overflow-auto">
-          <h1 className="text-2xl font-semibold">Chat</h1>
-          <nav>
-            <ul className="flex space-x-4">
-              <li>
-                <Link
-                  href="/listChat"
-                  className="font-semibold text-sm hover:underline"
-                >
-                  Regresar
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </header>
-
-        <div className="flex flex-col gap-4 p-4 rounded-lg">
-
-          {messages.map((message, index) => (
-            <motion.article
-              key={message.id}
-              className="flex flex-col"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <div
-                className="w-100 flex justify-end items-center flex-wrap"
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-              >
-                <div className="p-4 rounded-l-lg rounded-b-lg bg-blue-600 text-white text-wrap select-none">
-                  {message.text}
-                </div>
-                <div className="flex">
-                  <button
-                    className="text-green-500 hover:text-green-700 focus:outline-none mr-2"
-                    onClick={() => handleReply(message)}
-                  >
-                    {/* <FaReply /> */}
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-700 focus:outline-none"
-                    onClick={() => handleDelete(message.id)}
-                  >
-                    {/* <FaTrash /> */}
-                  </button>
-                </div>
-              </div>
-            </motion.article>
-          ))}
+    <Suspense
+      fallback={
+        <div className="fixed w-100 h-100">
+          <Loader dark={true} />
         </div>
-
-        {/* Mensaje de notificación para nuevos mensajes */}
-        {/* {newMessageNotification && (
-          <div className="fixed bottom-16 right-4 bg-gray-800 text-white px-4 py-2 rounded-md shadow-md">
-            ¡Tienes nuevos mensajes!
-          </div>
-        )} */}
-      </main>
-
-      <div className="flex px-4 w-full justify-center fixed bottom-0 mb-4 overflow-hidden">
-        <input
-          type="text"
-          onChange={(e) => handleText(e.target.value)}
-          onKeyDown={(e) => handleKey(e.key)}
-          value={inputText}
-          placeholder="Escribe tu mensaje"
-          className="flex-1 rounded-md border-2 border-blue-400 px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400"
-        />
-        <motion.button
-          onClick={handleClick}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md ml-4 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-300"
-          whileTap={{ scale: 0.95 }}
-        >
-          {/* <FaPaperPlane /> */}
-        </motion.button>
-      </div>
-    </>
+      }
+    >
+      <Chat ABIfile={ABIfile} />
+    </Suspense>
   );
 }
