@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "chain": "cd hardhat && npx hardhat node",
-    "deploy": "cd hardhat && npx hardhat ignition deploy ./ignition/modules/HelloWorld.js --network localhost"
+    "chain": "cd src/hardhat && npx hardhat node",
+    "deploy": "cd src/hardhat && npx hardhat ignition deploy ./ignition/modules/MessagingApp.js --network localhost"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

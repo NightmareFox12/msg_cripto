@@ -40,7 +40,7 @@ export default function ConnectWalletComponent({readJson}) {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-blue-400 to-blue-800 text-white">
       <div className="max-w-md w-full text-center">
-        <h1 className="text-4xl font-bold mb-4">Conectar con tu Wallet</h1>
+        <h1 className="text-4xl font-bold mb-4 px-1">Conectar con tu Wallet</h1>
         {isMetaMaskInstalled ? (
           <div>
             {isMetaMaskConnected ? (

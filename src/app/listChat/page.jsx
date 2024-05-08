@@ -16,8 +16,8 @@ const readJson = async () => {
 export default async function page() {
   const ABIfile = await readJson();
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    // <Suspense fallback={<div>Loading...</div>}> //-
       <ListChats ABIfile={ABIfile} />
-    </Suspense>
+    // </Suspense>
   );
 }
