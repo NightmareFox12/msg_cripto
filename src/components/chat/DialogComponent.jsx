@@ -54,7 +54,7 @@ export default function DialogComponent() {
   };
 
   useEffect(() => {
-    if (/^0x[a-fA-F0-9]{40}$/.test(addressInput)) {
+    if (/^0x[a-fA-F0-9]{40}$/.test(addressInput) && !/^0x0{40}$/.test(addressInput)) {
       setBtnInputState(false);
       setInfo('');
     } else if (addressInput.length > 42)

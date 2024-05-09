@@ -9,7 +9,7 @@ export const sendMessage = async (newSignner,address,msg,ABIfile) => {
     if (txReceipt.status === 1) return Promise.resolve();
 
   } catch (err) {
-    return Promise.reject(new Error(err.reason))
+    return Promise.reject(err)
   }
 }
 

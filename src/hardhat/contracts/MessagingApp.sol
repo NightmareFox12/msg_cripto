@@ -56,6 +56,7 @@ contract MessagingApp {
 
   function sendMessage(address _receiver, string memory _text) public {
     require(msg.sender != _receiver, "Cannot send message to yourself");
+    require(_receiver != address(0),"No troll!");
 
     // bytes32 _encryptedContent = keccak256(abi.encodePacked(_text));
     bool chatExists;
