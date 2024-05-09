@@ -6,12 +6,18 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 contract MessagingApp {
+
   struct Message {
     address sender;
     address receiver;
     string content;
     uint256 timestamp;
     bool isRead;
+  }
+
+  struct Profile {
+    string nickname;
+    uint8 idImage;
   }
 
   event MessageSent(
@@ -38,6 +44,7 @@ contract MessagingApp {
   mapping(address => mapping(address => uint256)) internal lastReadMessageId;
   mapping(address => address[]) internal chatAddressesSenders;
   mapping(address => address[]) internal chatAddressesReceivers;
+  mapping(address => Profile) internal profile;
 
   address internal owner;
 
@@ -121,6 +128,14 @@ contract MessagingApp {
   function getMessages(address _receiver) public view returns (Message[] memory, Message[] memory) {
     require(msg.sender != _receiver, "receiver can not be yourself");
     return (AllMessages[msg.sender][_receiver],AllMessages[_receiver][msg.sender]);
+  }
+
+  function getProfile(address _address) public view returns (Profile memory) {
+    return profile[_address];
+  }
+
+  function setProfile(string memory _nickname,uint8 _idImage) public {
+    profile[msg.sender] = Profile(_nickname,_idImage);
   }
 
   // Función para marcar un mensaje como leído

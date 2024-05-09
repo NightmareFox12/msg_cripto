@@ -6,7 +6,7 @@ import { initContract } from '@/hooks/initContract';
 import { ethers } from 'ethers';
 import { sendMessage } from '@/hooks/sendMsg';
 import { toast, Toaster } from 'sonner';
-// Tengo que hacer una wea flotable que al presionar por tantos segundos aparezca para eliminar ese mensaje en especifico
+//-Tengo que hacer una wea flotable que al presionar por tantos segundos aparezca para eliminar ese mensaje en especifico
 
 export default function Chat({ ABIfile }) {
   const [addressReceiver, setAddressReceiver] = useState('');
@@ -63,7 +63,6 @@ export default function Chat({ ABIfile }) {
     let allMessages = messagesSends.concat(messagesReceiveds);
     allMessages.sort((a, b) => a.date - b.date);
 
-    console.log(allMessages);
     setAllMessages(allMessages);
   };
 
@@ -84,12 +83,6 @@ export default function Chat({ ABIfile }) {
       toast.error('Ha fallado el envío del mensaje');
     }
   };
-
-  useEffect(() => {
-    const address = location.search.split('=')[1];
-    setAddressReceiver(address);
-    getAllMessages(address);
-  }, []);
 
   const handleText = (text) => {
     setInputText(text);
@@ -112,6 +105,13 @@ export default function Chat({ ABIfile }) {
       setInputText('');
     }
   };
+
+  useEffect(() => {
+    const address = location.search.split('=')[1];
+    setAddressReceiver(address);
+    getAllMessages(address);
+  }, []);
+
 
   // const handleDelete = (id) => {
   //   setMessages(messages.filter((message) => message.id !== id));
@@ -164,7 +164,6 @@ export default function Chat({ ABIfile }) {
                       ? 'justify-start'
                       : 'justify-end'
                   }
-                
               `}
                   onMouseDown={handleMouseDown}
                   onMouseUp={handleMouseUp}
