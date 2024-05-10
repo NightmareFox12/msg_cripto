@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import { ethers } from 'ethers';
 import { Toaster, toast } from 'sonner';
 import FAB from '@/components/chat/FAB';
-
+import FABprofile from '@/components/profile/FAB';
 
 export default function DialogComponent() {
   const [addressInput, setAddressInput] = useState('');
@@ -22,8 +22,6 @@ export default function DialogComponent() {
     e.preventDefault();
     setBtnInputState(true);
     setShowSpinner(true);
-    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-    if (accounts.length === 0) return (location.href = '/');
 
     const provider = new ethers.BrowserProvider(window.ethereum);
     const signner = await provider.getSigner();
@@ -54,7 +52,10 @@ export default function DialogComponent() {
   };
 
   useEffect(() => {
-    if (/^0x[a-fA-F0-9]{40}$/.test(addressInput) && !/^0x0{40}$/.test(addressInput)) {
+    if (
+      /^0x[a-fA-F0-9]{40}$/.test(addressInput) &&
+      !/^0x0{40}$/.test(addressInput)
+    ) {
       setBtnInputState(false);
       setInfo('');
     } else if (addressInput.length > 42)
@@ -70,7 +71,10 @@ export default function DialogComponent() {
       <Toaster position="top-center" richColors expand={true} />
       <motion.div>
         <section className="fixed bottom-5 right-5 z-10">
-          <FAB setOpen={setOpen} />
+          <div className="flex flex-col gap-3">
+            <FABprofile />
+            <FAB setOpen={setOpen} />
+          </div>
         </section>
         {/* <Transition.Root show={open} as={Fragment}> */}
         {/* <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}> */}

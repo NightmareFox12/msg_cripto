@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import DialogComponent from '@/components/chat/DialogComponent';
 import { getAllchats } from '@/hooks/getAllChats';
 import { ethers } from 'ethers';
 import { Toaster, toast } from 'sonner';
 import { initContract } from '@/hooks/initContract';
+import DialogComponent from '@/components/chat/DialogComponent';
+import Header from '@/components/general/Header';
+
 
 export default function ListChats({ ABIfile }) {
   const [address, setAddress] = useState('');
@@ -52,9 +54,6 @@ export default function ListChats({ ABIfile }) {
       };
     });
 
-    console.log(profileData[0].name);
-    console.log(profileData[0].imageID);
-
     return Promise.resolve(profileData);
   };
 
@@ -82,9 +81,6 @@ export default function ListChats({ ABIfile }) {
   }, []);
 
   const handleChangeAccount = async () => {
-    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-    if (accounts.length === 0) return (location.href = '/');
-
     setAddress(window.ethereum.selectedAddress);
 
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -102,10 +98,7 @@ export default function ListChats({ ABIfile }) {
   return (
     <div className="bg-gray-100 min-h-screen">
       <Toaster position="top-center" richColors expand={true} />
-      <header className="bg-gradient-to-t from-blue-400 to-blue-800 text-white py-2 px-5">
-        <h1 className="text-xl font-bold">Aplicación de Chat</h1>
-        <p className="text-md">{address}</p>
-      </header>
+      <Header title={'Chats'} />
 
       <main className="w-full py-1 bg-slate-100">
         <section className="flex flex-col gap-1 px-2">
