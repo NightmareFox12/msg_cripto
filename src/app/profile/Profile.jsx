@@ -18,6 +18,9 @@ export default function Profile({ ABIfile }) {
   const [showModalImages, setShowModalImages] = useState(false);
   const [imageSelected, setImageSelected] = useState(0);
   const [nickname, setNickname] = useState('');
+  const [nicknameStatic, setNicknameStatic] = useState('');
+  const [address,setAddress] = useState('');
+
   const [isChange, setIsChange] = useState(true);
 
   const getAdress = async () => {
@@ -45,6 +48,9 @@ export default function Profile({ ABIfile }) {
 
       setImageSelected(profileData[0].imageID);
       setNickname(profileData[1].name);
+      setNicknameStatic(profileData[1].name);
+      setAddress(signner.address);
+
     } catch (err) {
       console.log(err);
     }
@@ -57,6 +63,7 @@ export default function Profile({ ABIfile }) {
         const contract = await initContract(siggner, ABIfile);
 
         await contract.setProfile(nickname, imageSelected);
+        setNicknameStatic(nickname);  
         toast.success('Perfil actualizado correctamente');
       }
     } catch (err) {
@@ -108,13 +115,12 @@ export default function Profile({ ABIfile }) {
           </div>
 
           <div>
-            <h2 className="text-3xl font-bold">Juan Perez</h2>
-            <p className="font-medium">Address</p>
+            <h2 className="text-3xl font-bold">{nicknameStatic}</h2>
+            <p className="font-medium mt-2">{address}</p>
           </div>
         </article>
       </section>
 
-      {/* <hr className='mt-5'/> */}
       <h2 className="text-center m-10 text-3xl font-semibold">
         Actualizar Perfil
       </h2>
