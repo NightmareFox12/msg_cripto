@@ -1,9 +1,16 @@
 'use client';
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
-export default function Header({ title,back }) {
+export default function Header({ title, back }) {
   const [address, setAddress] = useState('');
+
+  const hoverVariants = {
+    hover: { scale: 1.1 },
+    initial: { scale: 1 },
+  };
 
   const handleChangeAccount = async () => {
     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
@@ -26,10 +33,26 @@ export default function Header({ title,back }) {
   }, []);
 
   return (
-    <header className="bg-gradient-to-t from-blue-400 to-blue-800 text-white py-2 px-5">
-      {back ? <Link href={back} className="text-white"></Link> : null}
-      <h1 className="text-xl font-bold">{title}</h1>
-      <p className="text-md">{address}</p>
+    <header className="flex flex-col bg-gradient-to-t from-blue-400 to-blue-800 text-white py-2 px-5">
+      <div className="flex gap-4 items-center">
+        {back !== '' ? (
+          <motion.div
+            variants={hoverVariants}
+            whileHover={'hover'}
+            initial={'initial'}
+          >
+            <Link href={back}>
+              <Image
+                src={require('@/public/icons/MaterialSymbolsArrowBackIosNew.svg')}
+                alt="Regresar"
+                className="w-6 h-6"
+              />
+            </Link>
+          </motion.div>
+        ) : null}
+        <h2 className="text-xl font-bold">{title}</h2>
+      </div>
+      {/* <p className="text-md">{address}</p> */}
     </header>
   );
 }

@@ -98,7 +98,7 @@ export default function ListChats({ ABIfile }) {
   return (
     <div className="bg-gray-100 min-h-screen">
       <Toaster position="top-center" richColors expand={true} />
-      <Header title={'Chats'} />
+      <Header title={'Chats'} back={''}/>
 
       <main className="w-full py-1 bg-slate-100">
         <section className="flex flex-col gap-1 px-2">
@@ -107,7 +107,7 @@ export default function ListChats({ ABIfile }) {
               className="flex items-center justify-center w-full"
               style={{ height: '80vh' }}
             >
-              <h1 className="text-3xl font-bold">Aún no hay chats</h1>
+              <h2 className="text-3xl font-bold">Aún no hay chats</h2>
             </div>
           )}
           {allChats.map((data, key) => (
