@@ -50,7 +50,7 @@ export default function ListChats({ ABIfile }) {
     const profileData = nickName.map((x) => {
       return {
         name: nickName[0] === '' ? addressUser : nickName[0],
-        imageID: parseInt(nickName[1]) === 0 ? 'avatar' : parseInt(nickName[1]),
+        imageID: parseInt(nickName[1]) === 0 ? 0 : parseInt(nickName[1]),
       };
     });
 

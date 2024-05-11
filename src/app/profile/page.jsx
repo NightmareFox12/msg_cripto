@@ -1,14 +1,26 @@
-import React from 'react'
-import Profile from './Profile'
+import React from 'react';
+import fs from 'fs/promises';
+import Profile from './Profile';
 
 export const metadata = {
-  title: 'Perfil'
-}
+  title: 'Perfil',
+};
 
-export default function page() {
+const readJson = async () => {
+  const file = await fs.readFile(
+    process.cwd() +
+      '/src/hardhat/artifacts/contracts/MessagingApp.sol/MessagingApp.json',
+    'utf8'
+  );
+  return Promise.resolve(file);
+};
+
+export default async function page() {
+  const ABIfile = await readJson();
+
   return (
     <>
-      <Profile/>
+      <Profile ABIfile={ABIfile} />
     </>
-  )
+  );
 }
