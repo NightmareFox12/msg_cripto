@@ -10,7 +10,7 @@ contract MessagingApp {
   struct Message {
     address sender;
     address receiver;
-    string content;
+    bytes contentEncripted;
     uint256 timestamp;
     bool isRead;
   }
@@ -57,15 +57,15 @@ contract MessagingApp {
     _;
   }
 
-  function getOwner() public view returns (address) {
-    return owner;
-  }
+  // function getOwner() public view returns (address) {
+  //   return owner;
+  // }
 
   function sendMessage(address _receiver, string memory _text) public {
     require(msg.sender != _receiver, "Cannot send message to yourself");
     require(_receiver != address(0),"No troll!");
 
-    // bytes32 _encryptedContent = keccak256(abi.encodePacked(_text));
+    bytes memory _encryptedContent = abi.encode(_text);
     bool chatExists;
 
     for (uint i = 0; i < chatAddressesSenders[msg.sender].length; i++) {
@@ -91,7 +91,7 @@ contract MessagingApp {
       Message({
         sender: msg.sender,
         receiver: _receiver,
-        content: _text,
+        contentEncripted: _encryptedContent,
         timestamp: block.timestamp,
         isRead: false
       })
@@ -128,6 +128,10 @@ contract MessagingApp {
   function getMessages(address _receiver) public view returns (Message[] memory, Message[] memory) {
     require(msg.sender != _receiver, "receiver can not be yourself");
     return (AllMessages[msg.sender][_receiver],AllMessages[_receiver][msg.sender]);
+  }
+
+  function decodeText(bytes memory _textCode) pure  public returns(string memory) {
+    return abi.decode(_textCode, (string));
   }
 
   function getProfile(address _address) public view returns (Profile memory) {

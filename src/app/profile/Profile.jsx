@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ethers } from 'ethers';
 import Image from 'next/image';
@@ -19,7 +19,7 @@ export default function Profile({ ABIfile }) {
   const [imageSelected, setImageSelected] = useState(0);
   const [nickname, setNickname] = useState('');
   const [nicknameStatic, setNicknameStatic] = useState('');
-  const [address,setAddress] = useState('');
+  const [address, setAddress] = useState('');
 
   const [isChange, setIsChange] = useState(true);
 
@@ -50,7 +50,6 @@ export default function Profile({ ABIfile }) {
       setNickname(profileData[1].name);
       setNicknameStatic(profileData[1].name);
       setAddress(signner.address);
-
     } catch (err) {
       console.log(err);
     }
@@ -63,7 +62,7 @@ export default function Profile({ ABIfile }) {
         const contract = await initContract(siggner, ABIfile);
 
         await contract.setProfile(nickname, imageSelected);
-        setNicknameStatic(nickname);  
+        setNicknameStatic(nickname);
         toast.success('Perfil actualizado correctamente');
       }
     } catch (err) {

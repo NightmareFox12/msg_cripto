@@ -4,7 +4,6 @@ import { promises as fs } from 'fs';
 import Chat from './Chat';
 import Loader from '@/components/general/Loader';
 
-
 const readJson = async () => {
   const file = await fs.readFile(
     process.cwd() +
@@ -19,8 +18,10 @@ export default async function page() {
   return (
     <Suspense
       fallback={
-        <div className="fixed w-100 h-100">
-          <Loader dark={true} />
+        <div className="sticky w-screen h-screen flex items-center justify-center">
+          <div className="text-indigo-400 scale-[2]">
+            <Loader dark={true} />
+          </div>
         </div>
       }
     >

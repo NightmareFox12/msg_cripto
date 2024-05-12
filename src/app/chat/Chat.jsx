@@ -38,8 +38,7 @@ export default function Chat({ ABIfile }) {
 
   const getAllMessages = async (address) => {
     const signner = await getSignner();
-    if (address === signner.address)
-      return document.getElementById('backLink').click();
+    if (address === signner.address) return document.getElementById('backLink').click();
 
     const contract = await initContract(signner, ABIfile);
     const messages = await contract.getMessages(address);
@@ -47,7 +46,7 @@ export default function Chat({ ABIfile }) {
     const messagesSends = messages[0].map((x) => {
       return {
         sender: x[0].toString(),
-        text: x[2].toString(),
+        text: contract.decodeText(x[2]).then(res => res),
         date: x[3].toString(),
       };
     });
@@ -55,7 +54,7 @@ export default function Chat({ ABIfile }) {
     const messagesReceiveds = messages[1].map((x) => {
       return {
         sender: x[0].toString(),
-        text: x[2].toString(),
+        text: contract.decodeText(x[2]).then(res => res),
         date: x[3].toString(),
       };
     });
@@ -67,6 +66,7 @@ export default function Chat({ ABIfile }) {
   };
 
   const handleSendMesagge = async () => {
+
     try {
       const signner = await getSignner();
 
@@ -78,7 +78,6 @@ export default function Chat({ ABIfile }) {
       );
       console.log(nose);
       getAllMessages(addressReceiver);
-      //una vez enviado tengo que irlos mostrando en la list usando getAllChats y tal
     } catch (err) {
       toast.error('Ha fallado el envío del mensaje');
     }
